@@ -11,7 +11,7 @@
 
 @interface MasterViewController ()
 
-@property NSMutableArray *objects;
+@property NSMutableArray *toDos;
 @end
 
 @implementation MasterViewController
@@ -37,10 +37,10 @@
 
 
 - (void)insertNewObject:(id)sender {
-    if (!self.objects) {
-        self.objects = [[NSMutableArray alloc] init];
+    if (!self.toDos) {
+        self.toDos = [[NSMutableArray alloc] init];
     }
-    [self.objects insertObject:[NSDate date] atIndex:0];
+    [self.toDos insertObject:[NSDate date] atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
