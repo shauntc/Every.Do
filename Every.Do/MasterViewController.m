@@ -16,6 +16,7 @@
 
 @property (nonatomic) NSMutableArray<ToDo*> *toDos;
 @property (nonatomic) NSIndexPath *selectedIndex;
+//@property (strong, nonatomic) IBOutlet UISwipeGestureRecognizer *swipeRecognizer;
 @property (nonatomic) UISwipeGestureRecognizer *swipeRecogizer;
 
 @end
@@ -149,6 +150,11 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
+
+
+
+
+
 
 
 
