@@ -16,6 +16,7 @@
 		2808248B1D91ACCE00065E12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 280824891D91ACCE00065E12 /* LaunchScreen.storyboard */; };
 		280824941D91AE0900065E12 /* ToDo.m in Sources */ = {isa = PBXBuildFile; fileRef = 280824931D91AE0900065E12 /* ToDo.m */; };
 		280824971D91B01700065E12 /* ToDoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 280824961D91B01700065E12 /* ToDoTableViewCell.m */; };
+		28D358141D91F62A00832ADC /* addToDoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D358131D91F62A00832ADC /* addToDoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		280824931D91AE0900065E12 /* ToDo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDo.m; sourceTree = "<group>"; };
 		280824951D91B01700065E12 /* ToDoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoTableViewCell.h; sourceTree = "<group>"; };
 		280824961D91B01700065E12 /* ToDoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoTableViewCell.m; sourceTree = "<group>"; };
+		28D358121D91F62A00832ADC /* addToDoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = addToDoViewController.h; sourceTree = "<group>"; };
+		28D358131D91F62A00832ADC /* addToDoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = addToDoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +84,8 @@
 				280824931D91AE0900065E12 /* ToDo.m */,
 				280824951D91B01700065E12 /* ToDoTableViewCell.h */,
 				280824961D91B01700065E12 /* ToDoTableViewCell.m */,
+				28D358121D91F62A00832ADC /* addToDoViewController.h */,
+				28D358131D91F62A00832ADC /* addToDoViewController.m */,
 				280824781D91ACCE00065E12 /* Supporting Files */,
 			);
 			path = Every.Do;
@@ -165,6 +170,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28D358141D91F62A00832ADC /* addToDoViewController.m in Sources */,
 				280824941D91AE0900065E12 /* ToDo.m in Sources */,
 				2808247D1D91ACCE00065E12 /* AppDelegate.m in Sources */,
 				280824801D91ACCE00065E12 /* MasterViewController.m in Sources */,
@@ -325,6 +331,7 @@
 				280824911D91ACCE00065E12 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

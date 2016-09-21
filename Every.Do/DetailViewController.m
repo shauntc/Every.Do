@@ -8,7 +8,11 @@
 
 #import "DetailViewController.h"
 
-@interface DetailViewController ()
+@interface DetailViewController () <UITextViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UISegmentedControl *prioritySegmentedControl;
+@property (weak, nonatomic) IBOutlet UISwitch *isCompleteSwitch;
+@property (weak, nonatomic) IBOutlet UITextView *detailsTextView;
 
 @end
 
@@ -16,20 +20,29 @@
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem {
-    if (_detailItem != newDetailItem) {
-        _detailItem = newDetailItem;
-            
+- (void)setToDo:(ToDo*)newToDo {
+    if (_toDo != newToDo) {
+        _toDo = newToDo;
+        
         // Update the view.
         [self configureView];
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self configureView];
+}
+
+
 
 - (void)configureView {
     // Update the user interface for the detail item.
-    if (self.detailItem) {
-        self.detailDescriptionLabel.text = [self.detailItem description];
+    if (self.toDo) {
+        self.prioritySegmentedControl.selectedSegmentIndex = self.toDo.priorityNumber - 1;
+        self.detailsTextView.text = self.toDo.toDoDescription;
+        self.title = self.toDo.title;
+        [self.isCompleteSwitch setOn:self.toDo.isComplete];
     }
 }
 
@@ -45,6 +58,22 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark: Input
+
+- (IBAction)isCompleteChanged:(UISwitch *)sender {
+    self.toDo.isComplete = sender.isOn;
+}
+
+- (IBAction)prioritySegmentedControlChanged:(UISegmentedControl *)sender {
+    self.toDo.priorityNumber = (int)sender.selectedSegmentIndex + 1;
+}
+
+-(void)textViewDidChange:(UITextView *)textView
+{
+    self.toDo.toDoDescription = textView.text;
+}
+
 
 
 @end

@@ -14,6 +14,7 @@
 @property (nonatomic) NSString *toDoDescription;
 @property (nonatomic, assign) int priorityNumber;
 @property (nonatomic, assign) BOOL isComplete;
+@property (nonatomic) NSDate *dueDate;
 
 -(instancetype)initWithTitle:(NSString*)title andDescription:(NSString*)description andPriority:(int)priority;
 

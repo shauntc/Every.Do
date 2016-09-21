@@ -8,7 +8,14 @@
 
 #import "ToDo.h"
 
+
+
 @implementation ToDo
+
+
+
+
+
 
 -(instancetype)initWithTitle:(NSString*)title andDescription:(NSString*)description andPriority:(int)priority
 {
@@ -18,6 +25,7 @@
         _toDoDescription = description;
         _priorityNumber = priority;
         _isComplete = NO;
+        _dueDate = nil;
     }
     return self;
 }
