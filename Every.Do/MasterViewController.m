@@ -8,16 +8,19 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
-#import "ToDo.h"
+#import "ToDo+CoreDataClass.h"
 #import "ToDoTableViewCell.h"
 #import "addToDoViewController.h"
+#import "CoreDataStack.h"
 
-@interface MasterViewController ()
+@interface MasterViewController () <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic) NSMutableArray<ToDo*> *toDos;
-@property (nonatomic) NSIndexPath *selectedIndex;
+//@property (nonatomic) NSIndexPath *selectedIndex;
 //@property (strong, nonatomic) IBOutlet UISwipeGestureRecognizer *swipeRecognizer;
 @property (nonatomic) UISwipeGestureRecognizer *swipeRecogizer;
+@property (nonatomic) CoreDataStack *stack;
+@property (nonatomic) NSFetchedResultsController *fetchedResultsController;
 
 @end
 
@@ -26,23 +29,40 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    self.stack = [CoreDataStack sharedManager];
+    NSFetchRequest *tdfr = [ToDo fetchRequest];
+    
+    //Edit fetch requests
+    tdfr.fetchLimit = 100;
+    NSSortDescriptor *sortPriority = [NSSortDescriptor sortDescriptorWithKey:@"priorityNumber" ascending:YES];
+    NSSortDescriptor *sortDueDate = [NSSortDescriptor sortDescriptorWithKey:@"dueDate" ascending:YES];
+    
+    tdfr.sortDescriptors = @[sortDueDate, sortPriority];
+    
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:tdfr managedObjectContext:self.stack.context sectionNameKeyPath:nil cacheName:nil];
+    self.fetchedResultsController.delegate = self;
+    
+    
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewToDo:)];
     self.navigationItem.rightBarButtonItem = addButton;
     
-    self.toDos = [[NSMutableArray alloc] init];
     
-    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Every.Do" andDescription:@"This exact Project which I need to complete but I want this string to be long" andPriority:1]];
-    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Weather App" andDescription:@"The other Project which I need to complete but I want this string to be long" andPriority:3]];
-    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Midterm App" andDescription:@"The midterm app Project which I need to complete but I want this string to be long" andPriority:1]];
-    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Midterm Exam" andDescription:@"The midterm exam which I need to complete but I want this string to be long" andPriority:2]];
-    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Image Gallery App" andDescription:@"Image gallery app from the yesterday which I need to complete but I want this string to be long" andPriority:1]];
     
-    self.toDos[1].isComplete = YES;
-    self.toDos[4].isComplete = YES;
-    self.selectedIndex = [[NSIndexPath alloc] init];
-    self.selectedIndex = [NSIndexPath indexPathForRow:0 inSection:0];
+    
+//    self.toDos = [[NSMutableArray alloc] init];
+//    
+//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Every.Do" andDescription:@"This exact Project which I need to complete but I want this string to be long" andPriority:1]];
+//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Weather App" andDescription:@"The other Project which I need to complete but I want this string to be long" andPriority:3]];
+//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Midterm App" andDescription:@"The midterm app Project which I need to complete but I want this string to be long" andPriority:1]];
+//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Midterm Exam" andDescription:@"The midterm exam which I need to complete but I want this string to be long" andPriority:2]];
+//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Image Gallery App" andDescription:@"Image gallery app from the yesterday which I need to complete but I want this string to be long" andPriority:1]];
+//    
+//    self.toDos[1].isComplete = YES;
+//    self.toDos[4].isComplete = YES;
+    
     self.title = @"To Do List";
     
     self.swipeRecogizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureOccured:)];
@@ -52,14 +72,6 @@
     
 }
 
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    
-    
-    [self.tableView reloadRowsAtIndexPaths:@[self.selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
 
 
 - (void)didReceiveMemoryWarning {
@@ -82,17 +94,15 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        self.selectedIndex = [self.tableView indexPathForSelectedRow];
-        ToDo *object = self.toDos[self.selectedIndex.row];
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        ToDo *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
         DetailViewController *controller = (DetailViewController *)[segue destinationViewController];
         [controller setToDo:object];
     }
     else if( [[segue identifier] isEqualToString:@"addToDoSegue"])
     {
-        ToDo *new = [[ToDo alloc] initWithTitle:@"" andDescription:@"" andPriority:2];
-        [self.toDos addObject:new];
-        [self.tableView reloadData];
-        self.selectedIndex = [NSIndexPath indexPathForRow:self.toDos.count-1 inSection:0];
+        ToDo *new = [NSEntityDescription insertNewObjectForEntityForName:@"ToDo" inManagedObjectContext:self.stack.context];
+
         addToDoViewController *newVC = (addToDoViewController*)[segue destinationViewController];
         newVC.toDo = new;
         
@@ -121,11 +131,16 @@
     
     ToDoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ToDoTableViewCell" forIndexPath:indexPath];
 
-    ToDo *todo = self.toDos[indexPath.row];
+    ToDo *todo = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
-    cell.toDo = todo;
+    [self configureCell:cell withTodo:todo];
     
     return cell;
+}
+
+-(void)configureCell:(ToDoTableViewCell *)cell withTodo:(ToDo *)object
+{
+    cell.toDo = object;
 }
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
@@ -171,6 +186,62 @@
     
     
 }
+
+
+#pragma mark - FechedResultsControllerDelegate
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+{
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        default:
+            return;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    UITableView *tableView = self.tableView;
+    
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] withTodo:anObject];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
 
 
 

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ToDo.h"
+#import "ToDo+CoreDataClass.h"
 
 @interface ToDoTableViewCell : UITableViewCell
 
