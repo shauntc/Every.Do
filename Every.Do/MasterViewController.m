@@ -11,15 +11,14 @@
 #import "ToDo+CoreDataClass.h"
 #import "ToDoTableViewCell.h"
 #import "addToDoViewController.h"
-#import "CoreDataStack.h"
+#import "ToDoSaveProtocol.h"
 
-@interface MasterViewController () <NSFetchedResultsControllerDelegate>
+@interface MasterViewController () <NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, ToDoSaveProtocol>
 
-@property (nonatomic) NSMutableArray<ToDo*> *toDos;
+//@property (nonatomic) NSMutableArray<ToDo*> *toDos;
 //@property (nonatomic) NSIndexPath *selectedIndex;
 //@property (strong, nonatomic) IBOutlet UISwipeGestureRecognizer *swipeRecognizer;
 @property (nonatomic) UISwipeGestureRecognizer *swipeRecogizer;
-@property (nonatomic) CoreDataStack *stack;
 @property (nonatomic) NSFetchedResultsController *fetchedResultsController;
 
 @end
@@ -30,6 +29,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    
+    //set up the the Core data stack
     self.stack = [CoreDataStack sharedManager];
     NSFetchRequest *tdfr = [ToDo fetchRequest];
     
@@ -43,25 +44,21 @@
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:tdfr managedObjectContext:self.stack.context sectionNameKeyPath:nil cacheName:nil];
     self.fetchedResultsController.delegate = self;
     
+    NSError *fetchError = nil;
+    [self.fetchedResultsController performFetch:&fetchError];
+    if(fetchError)
+    {
+        NSLog(@"Fetch Error: %@", fetchError);
+    }
+    
+    
+    
+    
     
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewToDo:)];
     self.navigationItem.rightBarButtonItem = addButton;
-    
-    
-    
-    
-//    self.toDos = [[NSMutableArray alloc] init];
-//    
-//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Every.Do" andDescription:@"This exact Project which I need to complete but I want this string to be long" andPriority:1]];
-//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Weather App" andDescription:@"The other Project which I need to complete but I want this string to be long" andPriority:3]];
-//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Midterm App" andDescription:@"The midterm app Project which I need to complete but I want this string to be long" andPriority:1]];
-//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Midterm Exam" andDescription:@"The midterm exam which I need to complete but I want this string to be long" andPriority:2]];
-//    [self.toDos addObject:[[ToDo alloc] initWithTitle:@"Image Gallery App" andDescription:@"Image gallery app from the yesterday which I need to complete but I want this string to be long" andPriority:1]];
-//    
-//    self.toDos[1].isComplete = YES;
-//    self.toDos[4].isComplete = YES;
     
     self.title = @"To Do List";
     
@@ -80,13 +77,15 @@
 }
 
 
-- (void)insertNewToDo:(id)sender {
-    if (!self.toDos) {
-        self.toDos = [[NSMutableArray alloc] init];
-    }
+- (void)insertNewToDo:(UIBarButtonItem *)sender
+{
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    AddToDoViewController *addView = [mainStoryboard instantiateViewControllerWithIdentifier:@"addToDoViewController"];
     
-    [self performSegueWithIdentifier:@"addToDoSegue" sender:self];
-     
+    addView.toDo = [NSEntityDescription insertNewObjectForEntityForName:@"ToDo" inManagedObjectContext:self.stack.context];
+    addView.delegate = self;
+    
+    [self.navigationController showViewController:addView sender:self];
 }
 
 
@@ -97,33 +96,21 @@
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         ToDo *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
         DetailViewController *controller = (DetailViewController *)[segue destinationViewController];
+        controller.delegate = self;
         [controller setToDo:object];
     }
-    else if( [[segue identifier] isEqualToString:@"addToDoSegue"])
-    {
-        ToDo *new = [NSEntityDescription insertNewObjectForEntityForName:@"ToDo" inManagedObjectContext:self.stack.context];
-
-        addToDoViewController *newVC = (addToDoViewController*)[segue destinationViewController];
-        newVC.toDo = new;
-        
-        
-    }
 }
-
-
-
-
-
 
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return [[self.fetchedResultsController sections] count];
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.toDos.count;
+    id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
+    return [sectionInfo numberOfObjects];
 }
 
 
@@ -143,49 +130,74 @@
     cell.toDo = object;
 }
 
--(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
-{
-    ToDo *temp = self.toDos[sourceIndexPath.row];
-    [self.toDos removeObjectAtIndex:sourceIndexPath.row];
-    [self.toDos insertObject:temp atIndex:destinationIndexPath.row];
-}
-
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
 
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.toDos removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }
-}
-
-
-
-
-
-
-
-
 - (void)swipeGestureOccured:(UISwipeGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateRecognized)
     {
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:[sender locationInView:self.tableView]];
         
-        self.toDos[indexPath.row].isComplete = !self.toDos[indexPath.row].isComplete;
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        ToDo *todo = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        todo.isComplete = !todo.isComplete;
         
+        NSError *saveError = nil;
+        
+        [self.stack.context save:&saveError];
+        if(saveError)
+        {
+            NSLog(@"swipeGestureOccured: Error saving context: %@", saveError);
+        }
     }
     
     
     
 }
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self deleteToDo:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        [self insertNewToDo:nil];
+    }
+}
+
+
+#pragma mark - ToDoSaveProtocol
+
+-(void)SaveToDo:(ToDo *)todo
+{
+    NSError *saveError = nil;
+    
+    [self.stack.context save:&saveError];
+    if(saveError)
+    {
+        NSLog(@"\nSave Error: %@ \nFor ToDo: %@", saveError, todo);
+    }
+}
+
+-(void)deleteToDo:(ToDo *)todo
+{
+    if(todo)
+    {
+        [self.stack.context deleteObject:todo];
+        [self SaveToDo:nil];
+    }
+    else{
+        NSLog(@"Error: ToDo was Nil");
+    }
+}
+
+-(void)undoToDo:(ToDo *)todo
+{
+    [self.stack.context undo];
+}
+
+
+
 
 
 #pragma mark - FechedResultsControllerDelegate

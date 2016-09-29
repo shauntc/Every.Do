@@ -6,9 +6,11 @@
 //  Copyright © 2016 Shaun Campbell. All rights reserved.
 //
 
-#import "addToDoViewController.h"
+#import "AddToDoViewController.h"
+#import "CoreDataStack.h"
+#import "MasterViewController.h"
 
-@interface addToDoViewController () <UITextViewDelegate>
+@interface AddToDoViewController () <UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UISegmentedControl *prioritySegmentControl;
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextView *detailsTextView;
@@ -17,21 +19,39 @@
 
 @end
 
-@implementation addToDoViewController
+@implementation AddToDoViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.toDo.isComplete = NO;
+    self.toDo.priorityNumber = 2;
+    
+    [self configureView];
+}
+
+//-(void)setKeyboarObservers
+//{
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardIsAppearing:) name:UIKeyboardDidShowNotification object: nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardIsLeaving:) name:UIKeyboardDidHideNotification object: nil];
+// 
+//}
+
+-(void)configureView
+{
+    self.titleTextField.placeholder = @"Enter a Task";
     
     self.prioritySegmentControl.selectedSegmentIndex = self.toDo.priorityNumber - 1;
     self.titleTextField.text = self.toDo.title;
-//    self.datePicker.date = self.toDo.dueDate;
     
+    self.navigationController.navigationItem.hidesBackButton = YES;
+    UIBarButtonItem *cancelButton =[[UIBarButtonItem alloc]initWithTitle:@"Cancel" style:UIBarButtonItemStyleDone target:self action:@selector(cancelButtonPressed:)];
+    self.navigationItem.leftBarButtonItem = cancelButton;
+    
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStylePlain target:self action:@selector(addButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = addButton;
     
     self.detailsTextView.layer.cornerRadius = 10;
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardIsAppearing:) name:UIKeyboardDidShowNotification object: nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardIsLeaving:) name:UIKeyboardDidHideNotification object: nil];
-
     
 }
 
@@ -41,15 +61,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 
 //-(void)keyboardIsAppearing:(NSNotification *)notification
@@ -108,6 +120,30 @@
     self.toDo.toDoDescription = textView.text;
 }
 
+
+-(void)cancelButtonPressed:(UIBarButtonItem *)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    [self.delegate deleteToDo:self.toDo];
+}
+
+-(void)addButtonPressed:(UIBarButtonItem *)sender
+{
+    if(self.toDo.title)
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+        [self.delegate SaveToDo:self.toDo];
+    }
+    else{
+        UIAlertController *emptyTitleAlert = [UIAlertController alertControllerWithTitle:@"No Title" message:@"Can't create a ToDo without a title" preferredStyle:UIAlertControllerStyleAlert];
+        
+        [emptyTitleAlert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        
+        
+        [self presentViewController:emptyTitleAlert animated:YES completion:nil];
+    }
+}
 
 
 @end

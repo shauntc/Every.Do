@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "ToDo+CoreDataClass.h"
+#import "ToDoSaveProtocol.h"
 
-@interface addToDoViewController : UIViewController
+@interface AddToDoViewController : UIViewController
 
+@property (nonatomic, assign) BOOL cancel;
 @property (nonatomic) ToDo *toDo;
+@property (nonatomic, weak) id<ToDoSaveProtocol> delegate;
 
 - (instancetype)initWithToDo:(ToDo*)toDo;
 

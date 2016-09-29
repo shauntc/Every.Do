@@ -30,7 +30,6 @@
 {
     self = [super initWithCoder:coder];
     if (self) {
-//        _swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureOccured:)];
         self.tintColor = [UIColor blueColor];
     }
     return self;
@@ -41,27 +40,14 @@
 -(void)setToDo:(ToDo *)toDo
 {
     _toDo = toDo;
-    [self setUpLabels];
+    [self configureView];
     
 }
 
-//-(void)swipeGestureOccured:(UISwipeGestureRecognizer*)sender
-//{
-//    if(sender.direction == UISwipeGestureRecognizerDirectionRight)
-//    {
-//        self.toDo.isComplete = !self.toDo.isComplete;
-//        [self setUpLabels];
-//    }
-//    else if(sender.direction == UISwipeGestureRecognizerDirectionLeft)
-//    {
-//        
-//    }
-//    
-//    
-//}
 
 
--(void)setUpLabels
+
+-(void)configureView
 {
     self.toDoTitleLabel.text = _toDo.title;
     
@@ -113,16 +99,5 @@
 
     // Configure the view for the selected state
 }
-
-
-
-//- (instancetype)initWithToDo:(ToDo*)toDo
-//{
-//    self = [super init];
-//    if (self) {
-//        _toDo = toDo;
-//    }
-//    return self;
-//}
 
 @end

@@ -26,7 +26,7 @@
 {
     self = [super init];
     if (self) {
-        NSURL *dataStackURL = [[NSBundle mainBundle] URLForResource:@"Every.Do" withExtension:@"momd"];
+        NSURL *dataStackURL = [[NSBundle mainBundle] URLForResource:@"ToDoList" withExtension:@"momd"];
         NSManagedObjectModel *mom = [[NSManagedObjectModel alloc] initWithContentsOfURL:dataStackURL];
         NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
         

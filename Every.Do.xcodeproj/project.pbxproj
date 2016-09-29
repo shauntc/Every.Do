@@ -19,7 +19,11 @@
 		28A9F5211D9C544B00B1B865 /* ToDoList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 28A9F51F1D9C544B00B1B865 /* ToDoList.xcdatamodeld */; };
 		28A9F5261D9C64B200B1B865 /* ToDo+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A9F5231D9C64B200B1B865 /* ToDo+CoreDataClass.m */; };
 		28A9F5271D9C64B200B1B865 /* ToDo+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A9F5251D9C64B200B1B865 /* ToDo+CoreDataProperties.m */; };
-		28D358141D91F62A00832ADC /* addToDoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D358131D91F62A00832ADC /* addToDoViewController.m */; };
+		28A9F5301D9CB2A000B1B865 /* SAMKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A9F52D1D9CB2A000B1B865 /* SAMKeychain.m */; };
+		28A9F5311D9CB2A000B1B865 /* SAMKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A9F52F1D9CB2A000B1B865 /* SAMKeychainQuery.m */; };
+		28A9F5351D9CB68800B1B865 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28A9F5341D9CB68800B1B865 /* Security.framework */; };
+		28A9F5381D9CB79C00B1B865 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A9F5371D9CB79C00B1B865 /* LoginViewController.m */; };
+		28D358141D91F62A00832ADC /* AddToDoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D358131D91F62A00832ADC /* AddToDoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,8 +48,16 @@
 		28A9F5231D9C64B200B1B865 /* ToDo+CoreDataClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ToDo+CoreDataClass.m"; sourceTree = "<group>"; };
 		28A9F5241D9C64B200B1B865 /* ToDo+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ToDo+CoreDataProperties.h"; sourceTree = "<group>"; };
 		28A9F5251D9C64B200B1B865 /* ToDo+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ToDo+CoreDataProperties.m"; sourceTree = "<group>"; };
-		28D358121D91F62A00832ADC /* addToDoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = addToDoViewController.h; sourceTree = "<group>"; };
-		28D358131D91F62A00832ADC /* addToDoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = addToDoViewController.m; sourceTree = "<group>"; };
+		28A9F5291D9CA49000B1B865 /* ToDoSaveProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoSaveProtocol.h; sourceTree = "<group>"; };
+		28A9F52C1D9CB2A000B1B865 /* SAMKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAMKeychain.h; sourceTree = "<group>"; };
+		28A9F52D1D9CB2A000B1B865 /* SAMKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAMKeychain.m; sourceTree = "<group>"; };
+		28A9F52E1D9CB2A000B1B865 /* SAMKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAMKeychainQuery.h; sourceTree = "<group>"; };
+		28A9F52F1D9CB2A000B1B865 /* SAMKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAMKeychainQuery.m; sourceTree = "<group>"; };
+		28A9F5341D9CB68800B1B865 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		28A9F5361D9CB79C00B1B865 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		28A9F5371D9CB79C00B1B865 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		28D358121D91F62A00832ADC /* AddToDoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddToDoViewController.h; sourceTree = "<group>"; };
+		28D358131D91F62A00832ADC /* AddToDoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddToDoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28A9F5351D9CB68800B1B865 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +77,7 @@
 			children = (
 				280824771D91ACCE00065E12 /* Every.Do */,
 				280824761D91ACCE00065E12 /* Products */,
+				28A9F5331D9CB68800B1B865 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,6 +95,7 @@
 				28A9F51B1D9C52B600B1B865 /* Model */,
 				28A9F5191D9C529C00B1B865 /* View */,
 				28A9F5181D9C528900B1B865 /* Controller */,
+				28A9F5321D9CB2A800B1B865 /* SAMKeychain */,
 				28A9F51A1D9C52A900B1B865 /* App */,
 				280824781D91ACCE00065E12 /* Supporting Files */,
 			);
@@ -98,13 +113,16 @@
 		28A9F5181D9C528900B1B865 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				28A9F5361D9CB79C00B1B865 /* LoginViewController.h */,
+				28A9F5371D9CB79C00B1B865 /* LoginViewController.m */,
+				28A9F5291D9CA49000B1B865 /* ToDoSaveProtocol.h */,
 				2808247E1D91ACCE00065E12 /* MasterViewController.h */,
 				2808247F1D91ACCE00065E12 /* MasterViewController.m */,
 				28A9F5281D9C711300B1B865 /* Cell */,
 				280824811D91ACCE00065E12 /* DetailViewController.h */,
 				280824821D91ACCE00065E12 /* DetailViewController.m */,
-				28D358121D91F62A00832ADC /* addToDoViewController.h */,
-				28D358131D91F62A00832ADC /* addToDoViewController.m */,
+				28D358121D91F62A00832ADC /* AddToDoViewController.h */,
+				28D358131D91F62A00832ADC /* AddToDoViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -150,6 +168,25 @@
 				280824961D91B01700065E12 /* ToDoTableViewCell.m */,
 			);
 			name = Cell;
+			sourceTree = "<group>";
+		};
+		28A9F5321D9CB2A800B1B865 /* SAMKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				28A9F52C1D9CB2A000B1B865 /* SAMKeychain.h */,
+				28A9F52D1D9CB2A000B1B865 /* SAMKeychain.m */,
+				28A9F52E1D9CB2A000B1B865 /* SAMKeychainQuery.h */,
+				28A9F52F1D9CB2A000B1B865 /* SAMKeychainQuery.m */,
+			);
+			name = SAMKeychain;
+			sourceTree = "<group>";
+		};
+		28A9F5331D9CB68800B1B865 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				28A9F5341D9CB68800B1B865 /* Security.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,12 +261,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				28A9F5271D9C64B200B1B865 /* ToDo+CoreDataProperties.m in Sources */,
-				28D358141D91F62A00832ADC /* addToDoViewController.m in Sources */,
+				28D358141D91F62A00832ADC /* AddToDoViewController.m in Sources */,
+				28A9F5381D9CB79C00B1B865 /* LoginViewController.m in Sources */,
 				2808247D1D91ACCE00065E12 /* AppDelegate.m in Sources */,
 				28A9F51E1D9C530F00B1B865 /* CoreDataStack.m in Sources */,
 				280824801D91ACCE00065E12 /* MasterViewController.m in Sources */,
 				28A9F5261D9C64B200B1B865 /* ToDo+CoreDataClass.m in Sources */,
 				280824971D91B01700065E12 /* ToDoTableViewCell.m in Sources */,
+				28A9F5301D9CB2A000B1B865 /* SAMKeychain.m in Sources */,
+				28A9F5311D9CB2A000B1B865 /* SAMKeychainQuery.m in Sources */,
 				2808247A1D91ACCE00065E12 /* main.m in Sources */,
 				28A9F5211D9C544B00B1B865 /* ToDoList.xcdatamodeld in Sources */,
 				280824831D91ACCE00065E12 /* DetailViewController.m in Sources */,

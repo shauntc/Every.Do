@@ -23,7 +23,7 @@
 - (void)setToDo:(ToDo*)newToDo {
     if (_toDo != newToDo) {
         _toDo = newToDo;
-        
+
         // Update the view.
         [self configureView];
     }
@@ -44,6 +44,8 @@
         self.title = self.toDo.title;
         [self.isCompleteSwitch setOn:self.toDo.isComplete];
     }
+    
+    
 }
 
 

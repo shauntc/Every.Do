@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CoreDataStack.h"
 
 @class DetailViewController;
 
 @interface MasterViewController : UITableViewController
+
+
+@property (nonatomic) CoreDataStack *stack;
+
 
 
 @end
